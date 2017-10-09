@@ -1,0 +1,18 @@
+FROM hub.c.163.com/library/tomcat:8.0-jre7
+
+ENV DATABASE_ADDR 127.0.0.1
+
+ADD http://demo.nos-eastchina1.126.net/springblogmysql.war /usr/local/tomcat/webapps/springblog.war
+
+RUN chmod 644 /usr/local/tomcat/webapps/springblog.war
+
+ADD http://demo.nos-eastchina1.126.net/spring-instrument-tomcat-4.2.2.RELEASE.jar /usr/local/tomcat/lib/spring-instrument-tomcat-4.2.2.RELEASE.jar
+
+RUN chmod 644 /usr/local/tomcat/lib/spring-instrument-tomcat-4.2.2.RELEASE.jar
+
+ADD http://demo.nos-eastchina1.126.net/start.sh /usr/local/tomcat/start.sh
+
+RUN chmod 755 /usr/local/tomcat/start.sh
+
+ENTRYPOINT /usr/local/tomcat/start.sh
+

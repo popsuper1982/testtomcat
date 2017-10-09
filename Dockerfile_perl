@@ -1,0 +1,28 @@
+FROM hub.c.163.com/library/perl:5.24.0-threaded
+
+ENV DATABASE_ADDR 127.0.0.1
+
+RUN mkdir -p /root/.cpan/CPAN/
+
+ADD http://demo.nos-eastchina1.126.net/MyConfig.pm /root/.cpan/CPAN/MyConfig.pm
+
+RUN chmod -R 755 /root/.cpan
+
+RUN perl -MCPAN -e "install DBI"
+
+RUN perl -MCPAN -e "install DBD::mysql"
+
+ADD http://demo.nos-eastchina1.126.net/showdb.pl  /root/showdb.pl
+
+RUN chmod 755 /root/showdb.pl
+
+RUN echo "deb http://mirrors.163.com/debian/ jessie main non-free contrib" > /etc/apt/sources.list &&\
+echo "deb http://mirrors.163.com/debian/ jessie-updates main non-free contrib" >> /etc/apt/sources.list &&\
+echo "deb http://mirrors.163.com/debian/ jessie-backports main non-free contrib" >> /etc/apt/sources.list &&\
+echo "deb http://mirrors.163.com/debian-security/ jessie/updates main non-free contrib" >> /etc/apt/sources.list &&\
+apt-get -y update &&\
+apt-get -y install openssh-server
+
+RUN mkdir -p /var/run/sshd && chmod 0755 /var/run/sshd
+
+ENTRYPOINT /usr/sbin/sshd -D
